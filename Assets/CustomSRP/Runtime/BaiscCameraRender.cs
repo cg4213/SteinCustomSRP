@@ -6,10 +6,12 @@ namespace Stein.Rendering
 
     public partial class BaiscCameraRender
     {
+        string m_sampleName;
         string m_bufferName;
         public BaiscCameraRender (string name)
         {
             this.m_bufferName = name;
+            this.m_sampleName = name;
 
             this.buffer = new CommandBuffer
             {
@@ -28,12 +30,16 @@ namespace Stein.Rendering
         void Setup ()
         {
             // buffer.name = camera.name;
-            buffer.BeginSample (m_bufferName);
+            buffer.BeginSample (m_sampleName);
             context.SetupCameraProperties (camera);
+
+            var clearFlags = camera.clearFlags;
             buffer.ClearRenderTarget (
-                (camera.clearFlags & CameraClearFlags.Depth) != 0,
-                (camera.clearFlags & CameraClearFlags.Color) != 0,
-                camera.backgroundColor);
+                clearFlags < CameraClearFlags.Depth,
+                clearFlags == CameraClearFlags.Color,
+                //感觉这个判断没啥意义，在其他情况下clearcolor根本不重要
+                //clearColor在线性空间下也需要转换为线性
+                clearFlags == CameraClearFlags.Color? camera.backgroundColor.linear : Color.clear);
 
             ExecuteCommand ();
         }
@@ -85,7 +91,7 @@ namespace Stein.Rendering
         }
         void Submit ()
         {
-            buffer.EndSample (m_bufferName);
+            buffer.EndSample (m_sampleName);
             ExecuteCommand ();
 
             context.Submit ();
@@ -103,6 +109,11 @@ namespace Stein.Rendering
             this.context = context;
             this.camera = camera;
 
+#if UNITY_EDITOR
+            PrepareBuffer ();
+            //需要在cull之前，否则可能因为没有可渲染内容而跳过
+            PrepareForSceneWindow ();
+#endif
             //skip when nothing to render
             if (!Cull ())
                 return;
