@@ -3,18 +3,39 @@
 
 #include "Utility.hlsl"
 
-CBUFFER_START(UnityPerMaterial)
-float4 _BaseColor;
-CBUFFER_END
+UNITY_INSTANCING_BUFFER_START(UnityPerMaterial)
+    UNITY_DEFINE_INSTANCED_PROP(float4,_BaseColor)
+UNITY_INSTANCING_BUFFER_END(UnityPerMaterial)
 
-float4 UnlitPassVertex(float3 positionOS:POSITION) :SV_POSITION
+struct appData
 {
-    float3 positionWS = TransformObjectToWorld(positionOS);
-    return TransformWorldToHClip(positionWS);
+    UNITY_VERTEX_INPUT_INSTANCE_ID
+    float3 positionOS:POSITION;
+};
+
+struct v2f
+{
+    float4 positionSV:SV_POSITION;
+    UNITY_VERTEX_INPUT_INSTANCE_ID
+};
+
+v2f UnlitPassVertex(appData input) 
+{
+    v2f output;
+
+    UNITY_SETUP_INSTANCE_ID(input);
+    UNITY_TRANSFER_INSTANCE_ID(input,output);
+
+    float3 positionWS = TransformObjectToWorld(input.positionOS);
+    output.positionSV =TransformWorldToHClip(positionWS);
+
+    return output;
 }
 
-float4 UnlitPassFragment(float4 positionSV:SV_POSITION): SV_TARGET
+float4 UnlitPassFragment(v2f input): SV_TARGET
 {
-    return _BaseColor;
+
+    UNITY_SETUP_INSTANCE_ID(input);
+    return UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial,_BaseColor);
 }
 #endif
