@@ -9,6 +9,7 @@ SAMPLER(sampler_BaseMap);
 UNITY_INSTANCING_BUFFER_START(UnityPerMaterial)
     UNITY_DEFINE_INSTANCED_PROP(float4,_BaseMap_ST)
     UNITY_DEFINE_INSTANCED_PROP(float4,_BaseColor)
+    UNITY_DEFINE_INSTANCED_PROP(float,_AlphaCutOff)
 UNITY_INSTANCING_BUFFER_END(UnityPerMaterial)
 
 struct appData
@@ -43,7 +44,11 @@ float4 UnlitPassFragment(v2f input): SV_TARGET
 {
     UNITY_SETUP_INSTANCE_ID(input);
     float4 tex = SAMPLE_TEXTURE2D(_BaseMap,sampler_BaseMap,input.uv);
-    float4 color = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial,_BaseColor);
-    return color*tex;
+    float4 baseColor = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial,_BaseColor);
+    float4 color = baseColor*tex;
+    #if defined(_CLIPPING) 
+        clip(color.a-UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial,_AlphaCutOff));
+    #endif
+    return color;
 }
 #endif
