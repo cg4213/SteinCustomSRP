@@ -1,6 +1,8 @@
 ﻿#ifndef STEIN_UNITY_INPUT_INCLUDED
 #define STEIN_UNITY_INPUT_INCLUDED
 
+//CBUFFER_START defined in Core RP lib,for multi platform cbuffer delcaration 
+//cbuffer make shader compatible with srp batcher
 CBUFFER_START(UnityPerDraw)
 float4x4 unity_ObjectToWorld;
 float4x4 unity_WorldToObject;

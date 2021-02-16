@@ -3,20 +3,26 @@
 
 #include "Utility.hlsl"
 
+TEXTURE2D(_BaseMap);
+SAMPLER(sampler_BaseMap);
+
 UNITY_INSTANCING_BUFFER_START(UnityPerMaterial)
+    UNITY_DEFINE_INSTANCED_PROP(float4,_BaseMap_ST)
     UNITY_DEFINE_INSTANCED_PROP(float4,_BaseColor)
 UNITY_INSTANCING_BUFFER_END(UnityPerMaterial)
 
 struct appData
 {
-    UNITY_VERTEX_INPUT_INSTANCE_ID
+    UNITY_VERTEX_INPUT_INSTANCE_ID//instancing index
     float3 positionOS:POSITION;
+    float2 uv:TEXCOORD0;
 };
 
 struct v2f
 {
     float4 positionSV:SV_POSITION;
-    UNITY_VERTEX_INPUT_INSTANCE_ID
+    float2 uv:VAR_BASE_UV;
+    UNITY_VERTEX_INPUT_INSTANCE_ID//instancing index
 };
 
 v2f UnlitPassVertex(appData input) 
@@ -24,18 +30,20 @@ v2f UnlitPassVertex(appData input)
     v2f output;
 
     UNITY_SETUP_INSTANCE_ID(input);
-    UNITY_TRANSFER_INSTANCE_ID(input,output);
+    UNITY_TRANSFER_INSTANCE_ID(input,output);//copy instancing index to output
 
     float3 positionWS = TransformObjectToWorld(input.positionOS);
     output.positionSV =TransformWorldToHClip(positionWS);
-
+    float4 st = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial,_BaseMap_ST);
+    output.uv = input.uv*st.xy +st.zw;
     return output;
 }
 
 float4 UnlitPassFragment(v2f input): SV_TARGET
 {
-
     UNITY_SETUP_INSTANCE_ID(input);
-    return UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial,_BaseColor);
+    float4 tex = SAMPLE_TEXTURE2D(_BaseMap,sampler_BaseMap,input.uv);
+    float4 color = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial,_BaseColor);
+    return color*tex;
 }
 #endif
