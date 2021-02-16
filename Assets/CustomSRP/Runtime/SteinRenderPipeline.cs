@@ -9,16 +9,19 @@ namespace Stein.Rendering
     {
         BaiscCameraRender m_basicCameraRender = new BaiscCameraRender ("Baisc Render");
 
-        public SteinRenderPipeline ()
+        public bool enableInstancing = true;
+        public bool enableDynamicBatching = true;
+        public SteinRenderPipeline (bool enableSRPBatcher, bool enableInstancing, bool enableDynamicBatching)
         {
-            //开启srp batcher
-            GraphicsSettings.useScriptableRenderPipelineBatching = true;
+            GraphicsSettings.useScriptableRenderPipelineBatching = enableSRPBatcher;
+            this.enableInstancing = enableInstancing;
+            this.enableDynamicBatching = enableDynamicBatching;
         }
         protected override void Render (ScriptableRenderContext context, Camera[] cameras)
         {
             foreach (var cam in cameras)
             {
-                m_basicCameraRender.Render (context, cam);
+                m_basicCameraRender.Render (context, cam, enableInstancing, enableDynamicBatching);
             }
         }
 

@@ -12,3 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a81b85a1435e4c4a9bea4889b3a9cd3, type: 3}
   m_Name: Stein Render Pipeline Asset
   m_EditorClassIdentifier: 
+  enableSRPBatcher: 1
+  enableInstancing: 1
+  enableDynamicBatching: 1

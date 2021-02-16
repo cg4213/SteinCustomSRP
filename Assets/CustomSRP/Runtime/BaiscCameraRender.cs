@@ -44,12 +44,16 @@ namespace Stein.Rendering
             ExecuteCommand ();
         }
 
-        void DrawGeometry ()
+        void DrawGeometry (bool enableInstancing, bool enableDynamicBatching)
         {
 
             var sortingSettings = new SortingSettings (this.camera);
 
-            var drawingSettings = new DrawingSettings (m_testUnlitTagId, sortingSettings);
+            var drawingSettings = new DrawingSettings (m_testUnlitTagId, sortingSettings)
+            {
+                enableDynamicBatching = enableDynamicBatching,
+                enableInstancing = enableInstancing
+            };
 
             //what to draw
             var filteringSettings = new FilteringSettings (RenderQueueRange.opaque);
@@ -104,7 +108,7 @@ namespace Stein.Rendering
             buffer.Clear ();
         }
 
-        public void Render (ScriptableRenderContext context, Camera camera)
+        public void Render (ScriptableRenderContext context, Camera camera, bool enableInstancing, bool enableDynamicBatching)
         {
             this.context = context;
             this.camera = camera;
@@ -120,7 +124,7 @@ namespace Stein.Rendering
 
             Setup ();
 
-            DrawGeometry ();
+            DrawGeometry (enableInstancing, enableDynamicBatching);
 #if UNITY_EDITOR
             DrawUnsupportedShaders ();
             DrawGizmos ();
