@@ -1,0 +1,18 @@
+{
+    "name": "Unity.RenderPipelines.HighDefinition.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:116a4d4dbf5c04973bbf517077a062a1"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
