@@ -3,6 +3,7 @@
 
     #include "../ShaderLibrary/Common.hlsl"
     #include "../ShaderLibrary/Surface.hlsl"
+    #include "../ShaderLibrary/Lighting.hlsl"
 
     TEXTURE2D(_BaseMap);
     SAMPLER(sampler_BaseMap);
@@ -77,6 +78,7 @@
         surface.color = baseColor.rgb;
         surface.alpha = baseColor.a;
 
-        return float4(surface.color,surface.alpha);
+        // return float4(surface.color,surface.alpha);
+        return float4(GetLighting(surface),surface.alpha);
     }
 #endif
