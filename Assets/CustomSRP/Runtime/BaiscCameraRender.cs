@@ -26,6 +26,7 @@ namespace Stein.Rendering
         private CullingResults cullingresult;
 
         ShaderTagId m_testUnlitTagId = new ShaderTagId ("SRPDefaultUnlit");
+        ShaderTagId m_CustomLitTagId = new ShaderTagId ("CustomLit");
 
         void Setup ()
         {
@@ -54,6 +55,7 @@ namespace Stein.Rendering
                 enableDynamicBatching = enableDynamicBatching,
                 enableInstancing = enableInstancing
             };
+            drawingSettings.SetShaderPassName(1,m_CustomLitTagId);
 
             //what to draw
             var filteringSettings = new FilteringSettings (RenderQueueRange.opaque);
