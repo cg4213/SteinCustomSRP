@@ -21,6 +21,7 @@ Shader "SteinRP/Lit"
             Tags{
                 "LightMode" = "CustomLit"
             }
+
             HLSLPROGRAM
             #pragma shader_feature _CLIPPING
             #pragma multi_compile_instancing
