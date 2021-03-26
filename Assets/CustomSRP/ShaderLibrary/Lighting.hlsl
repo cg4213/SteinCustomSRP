@@ -3,17 +3,17 @@
     #include "./Surface.hlsl"
     #include "./Light.hlsl"
     
-    float3 IncommingLight(Surface surface,Light light)
+    float3 IncommingLight(Surface surface, Light light)
     {
-        return saturate(dot(surface.normal,light.direction)) * light.color;
+        return saturate(dot(surface.normal, light.direction)) * light.color;
     }
-    float3 GetLighting(Surface surface,Light light)
+    float3 GetLighting(Surface surface, Light light)
     {
-        return IncommingLight(surface,light) * surface.color;
+        return IncommingLight(surface, light) * surface.color;
     }
     float3 GetLighting(Surface surface)
     {
-        return GetLighting(surface,GetDirectionalLight());
+        return GetLighting(surface, GetDirectionalLight());
     }
 
     

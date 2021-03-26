@@ -1,5 +1,11 @@
 #ifndef STEIN_LIGHT_INCLUDED
     #define STEIN_LIGHT_INCLUDED
+
+    CBUFFER_START(_CustomLight)
+    float3 _DirectionalLightColor;
+    float3 _DirectionalLightDirection;
+    CBUFFER_END
+
     struct Light
     {
         float3 color;
@@ -10,8 +16,8 @@
     {
         Light light;
 
-        light.color  = float3(0.9,0.9,0.9);
-        light.direction  = float3(0,-1,0);
+        light.color = _DirectionalLightColor;
+        light.direction = _DirectionalLightDirection;
         return light;
     }
 
