@@ -16,6 +16,7 @@ namespace Stein.Rendering
 
         ShaderTagId m_testUnlitTagId = new ShaderTagId("SRPDefaultUnlit");
         ShaderTagId m_CustomLitTagId = new ShaderTagId("CustomLit");
+        Lighting m_lighting = new Lighting();
         public BaiscCameraRender(string name)
         {
             this.m_bufferName = name;
@@ -126,7 +127,7 @@ namespace Stein.Rendering
                 return;
 
             Setup();
-
+            this.m_lighting.Setup(context, cullingresult);
             DrawGeometry(enableInstancing, enableDynamicBatching);
 #if UNITY_EDITOR
             DrawUnsupportedShaders();

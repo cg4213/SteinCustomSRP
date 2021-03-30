@@ -11,11 +11,17 @@
     {
         return IncommingLight(surface, light) * surface.color;
     }
+    
+
     float3 GetLighting(Surface surface)
     {
-        return GetLighting(surface, GetDirectionalLight());
+        float3 lightingColor = 0;
+        for (int index = 0; index < GetDirectionalLightCount(); index++)
+        {
+            lightingColor = lightingColor + GetLighting(surface, GetDirectionalLight(index));
+        }
+        return lightingColor;
     }
-
     
 
 #endif
